@@ -15,5 +15,8 @@ Then go to build/utils and run the example
 
 ```
 
-###The link to cam0.mp4 and cam0.yml
+##Unit test
+The link to cam0.mp4 and cam0.yml
 [Here](https://mega.nz/folder/YsU2AY7L#Of0oChqpFBh34Y0-GOQ7VQ/folder/clUj2ITZ)
+
+This version of Aruco uses IPPE internally, so if sqpnp == 0 then the pose given is from IPPE.
