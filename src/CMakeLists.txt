@@ -4,12 +4,12 @@ include_directories(.)
 
 SET(sources
     cameraparameters.cpp  debug.cpp             dictionary.cpp       ippe.cpp    markerdetector.cpp       markerlabeler.cpp  posetracker.cpp
-    cvdrawingutils.cpp    dictionary_based.cpp   marker.cpp  markerdetector_impl.cpp  markermap.cpp  fractaldetector.cpp
+    cvdrawingutils.cpp    dictionary_based.cpp   marker.cpp  markerdetector_impl.cpp  markermap.cpp  fractaldetector.cpp  sqpnp.cpp
     )
 SET(headers
     aruco_cvversioning.h  cameraparameters.h  dictionary_based.h  ippe.h            markerdetector_impl.h  markermap.h    timers.h
     aruco_export.h        cvdrawingutils.h    dictionary.h        levmarq.h         marker.h               picoflann.h
-    aruco.h               debug.h               markerdetector.h  markerlabeler.h        posetracker.h fractaldetector.h
+    aruco.h               debug.h               markerdetector.h  markerlabeler.h        posetracker.h fractaldetector.h sqpnp.hpp
     )
  set(fractal_sources
     fractallabelers/fractalposetracker.cpp
