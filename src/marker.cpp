@@ -327,7 +327,7 @@ namespace aruco
     {
         if (!isValid())
             throw cv::Exception(9004, "!isValid(): invalid marker. It is not possible to calculate extrinsics",
-                                "calculateExtrinsics", __FILE__, __LINE__);
+                    "calculateExtrinsics", __FILE__, __LINE__);
         if (markerSizeMeters <= 0)
             throw cv::Exception(9004, "markerSize<=0: invalid markerSize", "calculateExtrinsics", __FILE__, __LINE__);
         if (camMatrix.rows == 0 || camMatrix.cols == 0)
@@ -336,25 +336,43 @@ namespace aruco
         vector<cv::Point3f> objpoints = get3DPoints(markerSizeMeters);
 
 
-        cv::Mat raux, taux;
-//        cv::solvePnP(objpoints, *this, camMatrix, distCoeff, raux, taux);
-        solvePnP(objpoints, *this,camMatrix, distCoeff,raux,taux);
-        raux.convertTo(Rvec, CV_32F);
-        taux.convertTo(Tvec, CV_32F);
+        //cv::solvePnP(objpoints, *this, camMatrix, distCoeff, raux, taux);
+
+        bool sqpnp = 0;
+        if(sqpnp)
+        {
+            //Use sqpnp algo instead
+            cv::Mat normalizedImagePoints; //sqpnp uses normalized image points
+            cv::undistortPoints(*this, normalizedImagePoints, camMatrix, distCoeff);
+            cv::sqpnp::PoseSolver solver;
+            std::vector<cv::Mat> vec_rvecs, vec_tvecs;
+            solver.solve(objpoints, normalizedImagePoints, vec_rvecs, vec_tvecs);
+
+            vec_rvecs[0].convertTo(Rvec, CV_32F);
+            vec_tvecs[0].convertTo(Tvec, CV_32F);
+        }
+        else
+        {
+            cv::Mat raux, taux;
+            solvePnP(objpoints, *this,camMatrix, distCoeff,raux,taux);
+            raux.convertTo(Rvec, CV_32F);
+            taux.convertTo(Tvec, CV_32F);
+        }
+
         // rotate the X axis so that Y is perpendicular to the marker plane
         if (setYPerpendicular)
             rotateXAxis(Rvec);
         ssize = markerSizeMeters;
         // cout<<(*this)<<endl;
 
-//        auto setPrecision=[](double f, double prec){
-//            int x=roundf(f*prec);
-//            return  double(x)/prec;
-//        };
-//        for(int i=0;i<3;i++){
-//            Rvec.ptr<float>(0)[i]=setPrecision(Rvec.ptr<float>(0)[i],100);
-//            Tvec.ptr<float>(0)[i]=setPrecision(Tvec.ptr<float>(0)[i],1000);
-//        }
+        //        auto setPrecision=[](double f, double prec){
+        //            int x=roundf(f*prec);
+        //            return  double(x)/prec;
+        //        };
+        //        for(int i=0;i<3;i++){
+        //            Rvec.ptr<float>(0)[i]=setPrecision(Rvec.ptr<float>(0)[i],100);
+        //            Tvec.ptr<float>(0)[i]=setPrecision(Tvec.ptr<float>(0)[i],1000);
+        //        }
 
     }
 

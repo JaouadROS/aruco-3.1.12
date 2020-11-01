@@ -32,6 +32,7 @@ or implied, of Rafael Muñoz Salinas.
 #include "aruco_export.h"
 
 #include <opencv2/core/core.hpp>
+#include <sqpnp.hpp>
 
 #include <cstdint>
 #include <iostream>
