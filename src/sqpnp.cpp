@@ -246,7 +246,7 @@ void PoseSolver::computeOmega(InputArray objectPoints, InputArray imagePoints)
 
     cv::SVD omega_svd(omega_, cv::SVD::FULL_UV);
     s_ = omega_svd.w;
-    u_ = omega_svd.u;
+    u_ = cv::Mat(omega_svd.vt.t());
 
     CV_Assert(s_(0) >= 1e-7);
 
@@ -544,9 +544,9 @@ void PoseSolver::computeRowAndNullspace(const cv::Matx<double, 9, 1>& r,
     // Now we need to pick 3 columns of P with non-zero norm (> 0.3) and some angle between them (> 0.3).
     //
     // Find the 3 columns of Pn with largest norms
-    int index1 = -1,
-        index2 = -1,
-        index3 = -1;
+    int index1 = 0,
+        index2 = 0,
+        index3 = 0;
     double  max_norm1 = std::numeric_limits<double>::min();
     double min_dot12 = std::numeric_limits<double>::max();
     double min_dot1323 = std::numeric_limits<double>::max();
